@@ -22,6 +22,27 @@ class App extends React.Component {
   huono() {
     this.setState({ huono: this.state.huono + 1 })
   }
+
+ kaikki() {
+    return this.state.hyva + this.state.neutraali + this.state.huono
+ }
+ 
+ pyorista(luku){
+     return Math.round(luku * 100) / 100
+ }
+
+ keskiarvo() {
+    if(this.kaikki() === 0)
+    return 0
+    return this.pyorista((this.state.hyva - this.state.huono) / this.kaikki())
+  }
+
+positiivisia() {
+    if(this.kaikki() === 0)
+    return 0
+    return this.pyorista(this.state.hyva / this.kaikki())
+  }
+
   render() {
     return (
       <div>
@@ -43,6 +64,8 @@ class App extends React.Component {
             <li>Hyvä: {this.state.hyva}</li>
             <li>Neutraali: {this.state.neutraali}</li> 
             <li>Huono: {this.state.huono}</li>
+            <li>Keskiarvo: {this.keskiarvo()} </li>
+            <li>Positiivisia: {this.positiivisia()} % </li>
         </ul>
         </div>
       </div>
