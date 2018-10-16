@@ -7,7 +7,19 @@ function Statistic(props) {
     )
 }
 
+function StatisticsHelp (props){
+    if(props.yhteensa === 0)
+        return "Ei annettuja vastauksia";
+        return ( 
+            <div>   
+            <Statistic teksti="Keskiarvo" arvo={props.keskiarvo} />
+            <Statistic teksti="Positiivisia" arvo={props.positiivisia} yksikko="%" />
+            </div>
+        )
+}
+
 function Statistics(props) {
+    const kpl = props.hyva + props.neutraali + props.huono; 
     return (
         <div>
             <h1>Statistiikka</h1>
@@ -15,8 +27,7 @@ function Statistics(props) {
                 <Statistic teksti="Hyvä" arvo={props.hyva} />
                 <Statistic teksti="Neutraali" arvo={props.neutraali} />
                 <Statistic teksti="Huono" arvo={props.huono} />
-                <Statistic teksti="Keskiarvo" arvo={props.keskiarvo} />
-                <Statistic teksti="Positiivisia" arvo={props.positiivisia} yksikko="%" />
+                <StatisticsHelp yhteensa={kpl} keskiarvo={props.keskiarvo} positiivisia={props.positiivisia} />
             </ul>
         </div>
     )
@@ -69,7 +80,7 @@ class App extends React.Component {
     positiivisia() {
         if (this.kaikki() === 0)
             return 0
-        return this.pyorista(this.state.hyva / this.kaikki())
+        return this.pyorista(this.state.hyva / this.kaikki() * 100)
     }
 
     render() {
@@ -82,7 +93,7 @@ class App extends React.Component {
                     <Button teksti="Huono" hoidaPainallus={this.huono.bind(this)} />
                 </div>
                 <div>
-                    <Statistics hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} keskiarvo={this.keskiarvo()} positiivisia={this.state.hyva} />
+                    <Statistics hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} keskiarvo={this.keskiarvo()} positiivisia={this.positiivisia()} />
                 </div>
             </div>
         )
