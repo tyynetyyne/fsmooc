@@ -9,6 +9,17 @@ function Button(props) {
     )
 }
 
+function Eniten(props) {
+    return (
+        <div>
+        <h1>Eniten ääniä on saanut:</h1>
+            {props.teksti}<br />
+            {props.kpl} ääntä
+        </div>
+    )
+}
+
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -33,13 +44,20 @@ aanestys(){
     this.setState({ votes : kopio});
  }
  
+ voittaja(){
+     return Math.max(...this.state.votes)
+ }
+
   render() {
+    const maksimi = this.voittaja();
+    const index = this.state.votes.indexOf(maksimi);
     return (
       <div>
         {this.props.anecdotes[this.state.selected]} <br />
         Ääniä: {this.state.votes[this.state.selected]} <br />
         <Button teksti="Äänestä" hoidaPainallus={this.aanestys.bind(this)} />
         <Button teksti="Seuraava" hoidaPainallus={this.tilannemuutos.bind(this)} />
+        <Eniten teksti={anecdotes[index]} kpl={maksimi} />
       </div>
     )
   }
