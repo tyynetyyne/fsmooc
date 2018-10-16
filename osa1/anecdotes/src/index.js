@@ -13,7 +13,8 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: 0
+      selected: 0,
+      votes: [0, 0, 0, 0, 0, 0]
     }
   }
 
@@ -25,10 +26,19 @@ tilannemuutos(){
    this.setState({ selected: this.uusi()});
 }
 
+aanestys(){
+    const kopio = [...this.state.votes];
+    kopio[this.state.selected] += 1;
+    /* console.log("selected:", this.state.selected); */
+    this.setState({ votes : kopio});
+ }
+ 
   render() {
     return (
       <div>
         {this.props.anecdotes[this.state.selected]} <br />
+        Ääniä: {this.state.votes[this.state.selected]} <br />
+        <Button teksti="Äänestä" hoidaPainallus={this.aanestys.bind(this)} />
         <Button teksti="Seuraava" hoidaPainallus={this.tilannemuutos.bind(this)} />
       </div>
     )
