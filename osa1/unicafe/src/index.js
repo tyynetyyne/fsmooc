@@ -51,17 +51,11 @@ class App extends React.Component {
         }
     }
 
-    hyva() {
-        this.setState({ hyva: this.state.hyva + 1 })
-    }
-
-    neutraali() {
-        this.setState({ neutraali: this.state.neutraali + 1 })
-    }
-
-    huono() {
-        this.setState({ huono: this.state.huono + 1 })
-    }
+    tilannemuutos = (tilamuuttuja) => {
+        return () => {
+          this.setState({ [tilamuuttuja]: this.state[tilamuuttuja] + 1 })
+        }
+      }
 
     kaikki() {
         return this.state.hyva + this.state.neutraali + this.state.huono
@@ -88,9 +82,9 @@ class App extends React.Component {
             <div>
                 <div>
                     <h1>Anna palautetta</h1>
-                    <Button teksti="Hyvä" hoidaPainallus={this.hyva.bind(this)} />
-                    <Button teksti="Neutraali" hoidaPainallus={this.neutraali.bind(this)} />
-                    <Button teksti="Huono" hoidaPainallus={this.huono.bind(this)} />
+                    <Button teksti="Hyvä" hoidaPainallus= {this.tilannemuutos('hyva')}  />
+                    <Button teksti="Neutraali" hoidaPainallus= {this.tilannemuutos('neutraali')} />
+                    <Button teksti="Huono" hoidaPainallus= {this.tilannemuutos('huono')}  /> 
                 </div>
                 <div>
                     <Statistics hyva={this.state.hyva} neutraali={this.state.neutraali} huono={this.state.huono} keskiarvo={this.keskiarvo()} positiivisia={this.positiivisia()} />
