@@ -76,19 +76,23 @@ class App extends React.Component {
       }
 
     addPerson = (event) => {
+  
         event.preventDefault();
         const tulos = Exists(this.state.persons, this.state.newName);
-        // console.log('testi', tulos);
+    
         if (!tulos) {
             const newPerson = { name: this.state.newName, number: this.state.newNumber }
-            const persons = this.state.persons.concat(newPerson)
 
-            this.setState({
-                persons: persons,
+            axios.post('http://localhost:3001/persons', newPerson)
+            .then(response => {
+              console.log(response)
+              this.setState({
+                persons: this.state.persons.concat(response.data),
                 newName: '',
                 newNumber: ''
             })
-            // console.log('nimi lisätty')
+            console.log('nimi lisätty')
+            })        
         } else {
             // console.log('on jo')
         }
