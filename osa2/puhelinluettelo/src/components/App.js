@@ -14,6 +14,12 @@ const Persons = ({persons}) => {
     )
 }
 
+function Exists(persons, name){
+    return (
+        persons.map(p => p.name).includes(name)
+    )
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -28,18 +34,24 @@ class App extends React.Component {
 
 
 addName = (event) => {
-    event.preventDefault()
-    const persons = this.state.persons.concat({name: this.state.newName})
-    
-    this.setState({
-        persons: persons,
-        newName: ''
-    })
-    console.log('nimi lisätty')
+    event.preventDefault();
+    const tulos = Exists(this.state.persons, this.state.newName); 
+    // console.log('testi', tulos);
+    if(! tulos){
+        const persons = this.state.persons.concat({name: this.state.newName})
+
+        this.setState({
+            persons: persons,
+            newName: ''
+        })
+        // console.log('nimi lisätty')
+    } else {
+    // console.log('on jo')
+    }
 }
 
 handleNameChange = (event) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     this.setState({ newName: event.target.value })
 }
 
@@ -58,9 +70,6 @@ handleNameChange = (event) => {
         </form>
         <h2>Numerot</h2>
         <Persons persons={this.state.persons} />
-        <div>
-        debug: {this.state.newName}
-        </div>
       </div>
     )
   }
