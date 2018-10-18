@@ -74,10 +74,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        console.log('did mount')
+        // console.log('did mount')
         personService.getAll()
           .then(response => {
-            console.log('promise fulfilled')
+            // console.log('promise fulfilled')
             this.setState({ persons: response.data })
           })
       }
@@ -86,22 +86,30 @@ class App extends React.Component {
   
         event.preventDefault();
         const tulos = Exists(this.state.persons, this.state.newName);
-    
-        if (!tulos) {
-            const newPerson = { name: this.state.newName, number: this.state.newNumber }
+        const newPerson = { name: this.state.newName, number: this.state.newNumber };
 
+        if (!tulos) {
             personService.create(newPerson)
             .then(response => {
-              console.log(response)
+            //   console.log(response)
               this.setState({
                 persons: this.state.persons.concat(response.data),
                 newName: '',
                 newNumber: ''
             })
-            console.log('nimi lisätty')
+            // console.log('nimi lisätty')
             })        
         } else {
-            // console.log('on jo')
+            if (window.confirm(`Henkilö ${this.state.newName} on jo luettelossa. Tallennetaanko uusi numero?`)) { 
+                const existingId = this.state.persons[this.state.persons.findIndex(p => p.name === this.state.newName)].id;
+                personService.update(existingId, newPerson)
+                .then(response => {
+                    // console.log('addPerson change', response);
+                    this.setState({
+                        persons: this.state.persons.map(p => p.id !== response.data.id ? p : response.data)
+                    })
+                })
+            }
         }
     }
 
@@ -111,7 +119,7 @@ class App extends React.Component {
             if (window.confirm(`Haluatko poistaa ${this.state.persons[this.state.persons.findIndex(p => p.id === id)].name} luettelosta?`)) { 
                 personService.remove(id)
                 .then(response => {
-                    console.log('handleDelete', response)
+                    // console.log('handleDelete', response)
                     this.setState({
                         persons: this.state.persons.filter(p => p.id !== id)
                     })
