@@ -20,6 +20,13 @@ function Exists(persons, name){
     )
 }
 
+function Filter(persons, name){
+    return (
+        persons.filter(p => p.name.includes(name))
+    )
+}
+
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -29,7 +36,8 @@ class App extends React.Component {
         { name: 'Lea Kutvo',  number: '050-3420320'}
       ],
       newName: '',
-      newNumber: ''
+      newNumber: '',
+      newFilter: ''
     }
   }
 
@@ -53,35 +61,34 @@ addPerson = (event) => {
     }
 }
 
-handleNameChange = (event) => {
-    // console.log(event.target.value)
-    this.setState({ newName: event.target.value })
-}
 
-handleNumberChange = (event) => {
-    console.log(event.target.value)
-    this.setState({ newNumber: event.target.value })
+handleChange = (field) => {
+    return (event) => this.setState( {[field]: event.target.value})
 }
 
   render() {
     return (
       <div>
+        
         <h2>Puhelinluettelo</h2>
+        <div>
+            rajaa valintoja: 
+            <input value={this.state.newFilter} onChange={this.handleChange('newFilter')} />
+        </div>
         <form onSubmit={this.addPerson}>
           <div>
-            nimi: 
-            <input value={this.state.newName} onChange={this.handleNameChange} />
+            <h2>Lisää uusi</h2>
+            nimi: <input value={this.state.newName} onChange={this.handleChange('newName')} />
           </div>
           <div>
-            numero: 
-            <input value={this.state.newNumber} onChange={this.handleNumberChange} />
+            numero: <input value={this.state.newNumber} onChange={this.handleChange('newNumber')} />
           </div>
           <div>
             <button type="submit">lisää</button>
           </div>
         </form>
         <h2>Numerot</h2>
-        <Persons persons={this.state.persons} />
+        <Persons persons={Filter(this.state.persons, this.state.newFilter)} />
       </div>
     )
   }
