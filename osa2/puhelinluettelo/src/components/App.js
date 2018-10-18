@@ -1,16 +1,24 @@
 import React from 'react';
 import personService from '../services/persons';
 
-const Person = (props) => {
+const DelButton = ({deleteHandler, id}) => {
     return (
-        <p>{props.name} : {props.number}</p>
+        <button onClick={deleteHandler(id)}>
+            Poista
+        </button>
     )
 }
 
-const Persons = ({ persons }) => {
+const Person = (props) => {
+    return (
+        <p>{props.name} : {props.number} <DelButton id={props.id} deleteHandler={props.deleteHandler}/></p>
+    )
+}
+
+const Persons = ({ persons, deleteHandler }) => {
     return (
         <div>
-            {persons.map(pers => <Person name={pers.name} number={pers.number} key={pers.name} />)}
+            {persons.map(pers => <Person name={pers.name} number={pers.number} key={pers.name} id={pers.id} deleteHandler={deleteHandler}/>)}
         </div>
     )
 }
@@ -97,6 +105,20 @@ class App extends React.Component {
         }
     }
 
+    handleDelete(id){
+        return (
+            () => {
+            if (window.confirm(`Haluatko poistaa ${this.state.persons[this.state.persons.findIndex(p => p.id === id)].name} luettelosta?`)) { 
+                personService.remove(id)
+                .then(response => {
+                    console.log('handleDelete', response)
+                    this.setState({
+                        persons: this.state.persons.filter(p => p.id !== id)
+                    })
+                })
+            }
+        })
+    }
 
     handleChange = (field) => {
         return (event) => this.setState({ [field]: event.target.value })
@@ -110,9 +132,9 @@ class App extends React.Component {
                 <div>
                     <InputField name='rajaa valintoja' state={this.state['newFilter']} handler={this.handleChange('newFilter')} />
                 </div>
-                <Form fieldHandler={this.handleChange} submitHandler={this.addPerson} state={this.state} />
+                    <Form fieldHandler={this.handleChange} submitHandler={this.addPerson} state={this.state} />
                 <h2>Numerot</h2>
-                <Persons persons={Filter(this.state.persons, this.state.newFilter)} />
+                    <Persons persons={Filter(this.state.persons, this.state.newFilter)} deleteHandler={this.handleDelete.bind(this)} />
             </div>
         )
     }
