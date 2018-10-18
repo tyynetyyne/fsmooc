@@ -1,5 +1,19 @@
 import React from 'react';
 
+const Person = (props) => {
+    return (
+    <p>{props.name}</p>
+    )
+}
+
+const Persons = ({persons}) => {
+    return (
+        <div>
+        {persons.map(pers => <Person name={pers.name} key={pers.name}/>)}
+        </div>
+    )
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -43,7 +57,7 @@ handleNameChange = (event) => {
           </div>
         </form>
         <h2>Numerot</h2>
-        ...
+        <Persons persons={this.state.persons} />
         <div>
         debug: {this.state.newName}
         </div>
