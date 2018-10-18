@@ -2,14 +2,14 @@ import React from 'react';
 
 const Person = (props) => {
     return (
-    <p>{props.name}</p>
+    <p>{props.name} : {props.number}</p>
     )
 }
 
 const Persons = ({persons}) => {
     return (
         <div>
-        {persons.map(pers => <Person name={pers.name} key={pers.name}/>)}
+        {persons.map(pers => <Person name={pers.name} number={pers.number} key={pers.name}/>)}
         </div>
     )
 }
@@ -25,24 +25,27 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Arto Hellas' },
-        { name: 'Lea Kutvo'}
+        { name: 'Arto Hellas', number: '050-3429322'},
+        { name: 'Lea Kutvo',  number: '050-3420320'}
       ],
-      newName: ''
+      newName: '',
+      newNumber: ''
     }
   }
 
 
-addName = (event) => {
+addPerson = (event) => {
     event.preventDefault();
     const tulos = Exists(this.state.persons, this.state.newName); 
     // console.log('testi', tulos);
     if(! tulos){
-        const persons = this.state.persons.concat({name: this.state.newName})
+        const newPerson = {name: this.state.newName, number: this.state.newNumber}
+        const persons = this.state.persons.concat(newPerson)
 
         this.setState({
             persons: persons,
-            newName: ''
+            newName: '',
+            newNumber: ''
         })
         // console.log('nimi lisätty')
     } else {
@@ -55,14 +58,23 @@ handleNameChange = (event) => {
     this.setState({ newName: event.target.value })
 }
 
+handleNumberChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNumber: event.target.value })
+}
+
   render() {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <form onSubmit={this.addName}>
+        <form onSubmit={this.addPerson}>
           <div>
             nimi: 
             <input value={this.state.newName} onChange={this.handleNameChange} />
+          </div>
+          <div>
+            numero: 
+            <input value={this.state.newNumber} onChange={this.handleNumberChange} />
           </div>
           <div>
             <button type="submit">lisää</button>
