@@ -128,7 +128,7 @@ class App extends React.Component {
                       }, 5000)
                 })
                 .catch(error => {
-                    console.log('poistettu henkilö!!!');
+                    // console.log('poistettu henkilö!!!');
                     this.setState({
                         error: `Henkilö ${this.state.newName} on poistettu palvelimelta, lisätään se nyt uudelleen`,
                         persons: this.state.persons.filter(p => p.id !== existingId),
@@ -141,7 +141,7 @@ class App extends React.Component {
                     this.handleAdd(false, newPerson)
                 })         
             } else {
-                console.log('else haara');
+                // console.log('else haara');
                 this.setState({
                     info: `Henkilön ${this.state.newName} tietoja ei päivitetty`,
                     newName: '',
