@@ -1,8 +1,2 @@
-DELETE http://localhost:3001/api/persons/1 HTTP/1.1
-POST  http://localhost:3001/api/persons/1 HTTP/1.1
-content-type: application/json
+DELETE https://puhelinluettelobackend-ttblswcaww.now.sh/api/persons/1 HTTP/1.1
 
-{ 
-    "name":"Tiina Partanen",
-    "number": 030230302
-}

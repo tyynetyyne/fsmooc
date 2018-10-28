@@ -1,0 +1,2 @@
+GET https://puhelinluettelobackend-ttblswcaww.now.sh/api/persons HTTP/1.1
+
