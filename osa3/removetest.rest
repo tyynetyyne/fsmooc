@@ -1,0 +1,8 @@
+DELETE http://localhost:3001/api/persons/1 HTTP/1.1
+POST  http://localhost:3001/api/persons/1 HTTP/1.1
+content-type: application/json
+
+{ 
+    "name":"Tiina Partanen",
+    "number": 030230302
+}
