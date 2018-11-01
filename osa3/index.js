@@ -1,6 +1,7 @@
 const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 const app = express()
 const bodyParser = require('body-parser')
 app.use(cors())
@@ -39,6 +40,14 @@ app.get('/', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+  // Person
+  // .find({})
+  // .then(result => {
+  //   if(result){
+  //     res.json(result)
+  //   }
+  //   response.status(404).end()
+  //   })
 })
 
 app.get('/api/persons/:id', (request, response) => {

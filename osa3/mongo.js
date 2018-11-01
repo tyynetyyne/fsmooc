@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
-url = process.env.PHONE_DATABASE
+//url = process.env.PHONE_DATABASE
+const url = 'mongodb://<username>:<password>@ds145463.mlab.com:45463/phonenumbers'
 
 mongoose.connect(url)
 
@@ -8,8 +9,6 @@ const Person = mongoose.model('Person', {
   name: String,
   number: Number
 })
-
-module.exports = Note
 
 if(process.argv.length < 3){
 Person
