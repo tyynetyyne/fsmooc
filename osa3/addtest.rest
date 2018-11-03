@@ -1,7 +1,7 @@
-POST  https://puhelinluettelobackend-ttblswcaww.now.sh/api/persons HTTP/1.1
+POST  https://puhelinluettelobackend-mbbvdvfiiq.now.sh/api/persons HTTP/1.1
 content-type: application/json
 
 { 
-    "name":"Tiina Partanen",
+    "name":"Rest Adding",
     "number": "030230302"
 }

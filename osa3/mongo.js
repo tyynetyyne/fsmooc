@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 
-//url = process.env.PHONE_DATABASE
-const url = 'mongodb://<username>:<password>@ds145463.mlab.com:45463/phonenumbers'
+const url = process.env.PHONE_DATABASE
+//const url = 'mongodb://********/@ds145463.mlab.com:45463/phonenumbers'
+
+console.log('printing something')
 
 mongoose.connect(url)
 

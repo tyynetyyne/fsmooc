@@ -1,2 +1,2 @@
-DELETE https://puhelinluettelobackend-ttblswcaww.now.sh/api/persons/1 HTTP/1.1
+DELETE https://puhelinluettelobackend-sofxvxafol.now.sh/api/persons/5bd86a49f47de11888098341 HTTP/1.1
 
