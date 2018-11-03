@@ -1,6 +1,11 @@
 import axios from 'axios'
+
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').config()
+// }
+
+// const baseUrl = process.env.REACT_APP_SERVER 
 const baseUrl = '/api/persons'
-//const baseUrl = 'http://localhost:3001/api/persons'
 
 const getAll = () => {
   return axios.get(baseUrl)
