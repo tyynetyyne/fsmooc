@@ -1,2 +1,2 @@
-GET https://puhelinluettelobackend-mbbvdvfiiq.now.sh/api/persons/5bd865677bebfe4dc8e7b3b6 HTTP/1.1
+GET http://localhost:3001/api/persons HTTP/1.1
 
