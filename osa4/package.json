@@ -1,0 +1,28 @@
+{
+  "name": "blogsbackend",
+  "version": "1.0.0",
+  "description": "Backend for blog-server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --verbose",
+    "watch": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tyynetyyne/fsmooc/tree/master/osa4"
+  },
+  "author": "Tiina Partanen",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "eslint": "^5.8.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.9"
+  }
+}
