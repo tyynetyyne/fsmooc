@@ -2,8 +2,8 @@ POST  http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 { 
-  "title": "Aamulehti",
+  "title": "Päivälehti",
   "author": "Janne Järvelä",
-  "url": "http://www.aamulehti.fi",
+  "url": "http://www.sanomapro.fi",
   "likes": "2"
 }
