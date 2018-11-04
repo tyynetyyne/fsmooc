@@ -1,1 +1,0 @@
-GET https://puhelinluettelobackend-mbbvdvfiiq.now.sh/info HTTP/1.1
