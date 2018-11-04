@@ -2,8 +2,8 @@ POST  http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 { 
-  "title": "Iltasanomat",
-  "author": "Seppo Jokinen",
-  "url": "http://www.is.fi",
-  "likes": 2
+  "title": "Aamulehti",
+  "author": "Janne Järvelä",
+  "url": "http://www.aamulehti.fi",
+  "likes": "2"
 }
