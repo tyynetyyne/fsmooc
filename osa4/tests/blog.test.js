@@ -69,10 +69,20 @@ const bestBlogMany = {
   likes: 12
 }
 const bestBlogOne = {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    likes: 5
-  }
+  title: 'Go To Statement Considered Harmful',
+  author: 'Edsger W. Dijkstra',
+  likes: 5
+}
+
+const bestAuthorMany = {
+  author: "Robert C. Martin",
+  blogs: 3
+}
+
+const bestAuthorOne = {
+  author: 'Edsger W. Dijkstra',
+  blogs: 1
+}
 
 test('dummy is called', () => {
   const blogs = []
@@ -117,7 +127,7 @@ describe('max likes', () => {
 
   test('the best blog when the list is empty', () => {
     const result = listHelper.favoriteBlog(listWithZeroBlog)
-    expect(result).toBe(0)
+    expect(result).toBe(false)
   })
 })
 
@@ -126,5 +136,21 @@ describe('max likes', () => {
 test('the best blog when the list has many blogs', () => {
     const result = listHelper.favoriteBlog(listWithManyBlogs)
     expect(result).toEqual(bestBlogMany)
+  })
+})
+
+describe('best author', () => {
+
+  test('the author with most blogs', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+    expect(result).toEqual(bestAuthorMany)
+  })
+})
+
+describe('best author', () => {
+
+  test('the author with most blogs, list of one', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual(bestAuthorOne)
   })
 })
