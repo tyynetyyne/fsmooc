@@ -145,7 +145,7 @@ describe('max likes', () => {
 
   test('the best blog when the list is empty', () => {
     const result = listHelper.favoriteBlog(listWithZeroBlog)
-    expect(result).toBe(false)
+    expect(result).toBe(null)
   })
 })
 
@@ -169,7 +169,7 @@ describe('best author', () => {
 
   test('the author with most blogs, empty list', () => {
     const result = listHelper.mostBlogs(listWithZeroBlog)
-    expect(result).toBe(false)
+    expect(result).toBe(null)
   })
 })
 
@@ -193,6 +193,6 @@ describe('most likes', () => {
 
   test('the author with most likes, empty list', () => {
     const result = listHelper.mostLikes(listWithZeroBlog)
-    expect(result).toBe(false)
+    expect(result).toBe(null)
   })
 })

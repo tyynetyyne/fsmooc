@@ -16,7 +16,7 @@ const totalLikes = (blogs) => {
 const favoriteBlog = (blogs) => {
   const likes = blogs.map(b => b.likes)
   if(likes.length === 0){
-    return false
+    return null
   }
   const maxlikes = Math.max(...likes)
   const bestblog = blogs.find(b => b.likes === maxlikes)
@@ -29,7 +29,7 @@ const favoriteBlog = (blogs) => {
 
 const mostBlogs = (blogs) => {
   if(blogs.length === 0){
-    return false
+    return null
   }
   const frequencies = R.countBy(blog => blog.author)(blogs)
   const maxFreq = Math.max(...Object.values(frequencies))
@@ -45,9 +45,8 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
   if(blogs.length === 0){
-    return false
+    return null
   }
-
   const frequencies = R.countBy(blog => blog.author)(blogs)
   const names = Object.keys(frequencies)
   const likesPerName = names.map(name => {
