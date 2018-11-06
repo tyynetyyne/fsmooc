@@ -84,11 +84,29 @@ const bestAuthorOne = {
   blogs: 1
 }
 
+const mostLikesMany = {
+  author: "Edsger W. Dijkstra",
+  likes: 17
+}
+
+const mostLikesOne = {
+  author: 'Edsger W. Dijkstra',
+  likes: 5
+}
+
 test('dummy is called', () => {
   const blogs = []
 
   const result = listHelper.dummy(blogs)
   expect(result).toBe(1)
+})
+
+describe('total likes', () => {
+
+  test('the likes when the list has many blogs', () => {
+    const result = listHelper.totalLikes(listWithManyBlogs)
+    expect(result).toBe(36)
+  })
 })
 
 describe('total likes', () => {
@@ -107,11 +125,11 @@ describe('total likes', () => {
   })
 })
 
-describe('total likes', () => {
+describe('max likes', () => {
 
-test('the likes when the list has many blogs', () => {
-    const result = listHelper.totalLikes(listWithManyBlogs)
-    expect(result).toBe(36)
+  test('the best blog when the list has many blogs', () => {
+    const result = listHelper.favoriteBlog(listWithManyBlogs)
+    expect(result).toEqual(bestBlogMany)
   })
 })
 
@@ -131,14 +149,6 @@ describe('max likes', () => {
   })
 })
 
-describe('max likes', () => {
-
-test('the best blog when the list has many blogs', () => {
-    const result = listHelper.favoriteBlog(listWithManyBlogs)
-    expect(result).toEqual(bestBlogMany)
-  })
-})
-
 describe('best author', () => {
 
   test('the author with most blogs', () => {
@@ -152,5 +162,37 @@ describe('best author', () => {
   test('the author with most blogs, list of one', () => {
     const result = listHelper.mostBlogs(listWithOneBlog)
     expect(result).toEqual(bestAuthorOne)
+  })
+})
+
+describe('best author', () => {
+
+  test('the author with most blogs, empty list', () => {
+    const result = listHelper.mostBlogs(listWithZeroBlog)
+    expect(result).toBe(false)
+  })
+})
+
+describe('most likes', () => {
+
+  test('the author with most likes', () => {
+    const result = listHelper.mostLikes(listWithManyBlogs)
+    expect(result).toEqual(mostLikesMany)
+  })
+})
+
+describe('most likes', () => {
+
+  test('the author with most likes, list of one', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual(mostLikesOne)
+  })
+})
+
+describe('most likes', () => {
+
+  test('the author with most likes, empty list', () => {
+    const result = listHelper.mostLikes(listWithZeroBlog)
+    expect(result).toBe(false)
   })
 })

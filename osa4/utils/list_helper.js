@@ -4,12 +4,12 @@ const dummy = () => {
   return 1
 }
 
-const sum = (acc, cur) => acc + cur
+function sum(acc, cur){
+  return acc + cur
+}
 
 const totalLikes = (blogs) => {
-  //console.log('likes', blogs.map(b => b.likes))
   const likes = blogs.map(b => b.likes)
-  //console.log('reduce', likes.reduce(sum, 0))
   return likes.reduce(sum, 0)
 }
 
@@ -28,25 +28,47 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
+  if(blogs.length === 0){
+    return false
+  }
   const frequencies = R.countBy(blog => blog.author)(blogs)
-  console.log('freq', frequencies)
   const maxFreq = Math.max(...Object.values(frequencies))
-  console.log('maxFreq', maxFreq)
   const result = Object.keys(frequencies).map(key => {
     return [key, frequencies[key]]
   })
-  console.log('result', result)
   const maxAuthor = result.find(r => {return r[1] === maxFreq})
-  console.log('maxAuthor', maxAuthor)
   return {
     author: maxAuthor[0],
     blogs: maxFreq
   }
 }  
 
+const mostLikes = (blogs) => {
+  if(blogs.length === 0){
+    return false
+  }
+
+  const frequencies = R.countBy(blog => blog.author)(blogs)
+  const names = Object.keys(frequencies)
+  const likesPerName = names.map(name => {
+    return [ name, blogs
+      .filter(blog => {return blog.author === name})
+      .map(blog => {return blog.likes})
+      .reduce(sum, 0)
+    ]
+  })
+  const maxLikes = Math.max(...likesPerName.map(likes => likes[1]))
+  const mostPopular = likesPerName.find(stat => {return stat[1] === maxLikes})
+  return {
+    author: mostPopular[0],
+    likes: mostPopular[1]
+  }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
