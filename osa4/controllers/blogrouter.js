@@ -38,32 +38,32 @@ blogRouter.delete('/:id', (request, response) => {
     })
 })
 
-blogRouter.post('/', (request, response) => {
-  const body = request.body
-  console.log('adding', request.body)
-  if (body.url === undefined) {
-    return response.status(400).json({ error: 'url missing' })
-  }
-  if (body.title === undefined) {
-    return response.status(400).json({ error: 'title missing' })
-  }
-  if (body.author === undefined) {
-    return response.status(400).json({ error: 'author missing' })
-  }
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes === undefined ? 0 : body.likes
-  })
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(Blog.format(result))
+blogRouter.post('/', async (request, response) => {
+  try{
+    const body = request.body
+    console.log('adding', request.body)
+    if (body.url === undefined) {
+      return response.status(400).json({ error: 'url missing' })
+    }
+    if (body.title === undefined) {
+      return response.status(400).json({ error: 'title missing' })
+    }
+    if (body.author === undefined) {
+      return response.status(400).json({ error: 'author missing' })
+    }
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes === undefined ? 0 : body.likes
     })
-    .catch( () => {
-      console.log('save failed')
-    })
+
+    const savedBlog = await blog.save()
+    response.status(201).json(Blog.format(savedBlog))
+  } catch(exception) {
+    console.log('save failed')
+    response.status(500).end()
+  }
 })
 
 blogRouter.put('/:id', (request, response) => {
