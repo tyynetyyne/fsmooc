@@ -59,6 +59,24 @@ const oneBlog = [
   }
 ]
 
+const newBlog = {
+  title: 'Koodauksen ABC',
+  url: 'http://koodauksenabc.blogspot.fi',
+  author: 'Tiina Partanen',
+  likes: 0
+}
+
+const newBlogNoTitleNoUrl = {
+  author: 'Tiina Partanen',
+  likes: 0
+}
+
+const newBlogNoLikes = {
+  title: 'Lietsufyke',
+  url: 'http://lietsufyke.blogspot.fi',
+  author: 'Tiina Partanen'
+}
+
 const initialBlogs = manyBlogs
 const zeroBlogs = []
 
@@ -66,5 +84,8 @@ module.exports = {
   oneBlog,
   manyBlogs,
   zeroBlogs,
-  initialBlogs
+  newBlog,
+  initialBlogs,
+  newBlogNoTitleNoUrl,
+  newBlogNoLikes
 }

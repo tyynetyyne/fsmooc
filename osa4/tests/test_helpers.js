@@ -14,6 +14,16 @@ const blogsInDb = async () => {
   return blogs.map(Blog.format)
 }
 
+// function formatBlogId(blog){
+//   return {
+//     author: blog.author,
+//     title: blog.title,
+//     url: blog.url,
+//     likes: blog.likes,
+//     id: blog.id.toString()
+//     }
+// }
+
 module.exports = {
   nonExistingId, blogsInDb
 }
