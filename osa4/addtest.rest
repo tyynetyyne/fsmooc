@@ -1,9 +1,9 @@
-POST  http://localhost:3003/api/blogs HTTP/1.1
+POST  http://localhost:3002/api/blogs HTTP/1.1
 content-type: application/json
 
-{ 
-  "title": "Päivälehti",
-  "author": "Janne Järvelä",
-  "url": "http://www.sanomapro.fi",
-  "likes": "2"
-}
+ {
+    "title": "React patterns",
+    "author": "Michael Chan",
+    "url": "https://reactpatterns.com/",
+    "likes": 7
+  }

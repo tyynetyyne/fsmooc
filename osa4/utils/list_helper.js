@@ -56,6 +56,15 @@ const mostLikes = (blogs) => {
       .reduce(sum, 0)
     ]
   })
+
+// const sumsOfLikes = names.map(name => {
+// const thisAuthorsBlogs = blogs.filter(blog => blog.author === name)
+// const likes = thisAuthorsBlogs.map(blog => blog.likes)
+// const likesSum = likes.reduce(sum, 0)
+// console.log('test2', thisAuthorsBlogs, likes, likesSum)
+//   return likesSum
+// })
+
   const maxLikes = Math.max(...likesPerName.map(likes => likes[1]))
   const mostPopular = likesPerName.find(stat => {return stat[1] === maxLikes})
   return {

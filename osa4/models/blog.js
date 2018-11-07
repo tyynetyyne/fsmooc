@@ -1,16 +1,5 @@
 const mongoose = require('mongoose')
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-
-const mongoUrl = process.env.BLOG_DATABASE
-
-mongoose.connect(mongoUrl, { useNewUrlParser: true })
-  .catch( () => {
-    console.log('database login failed')
-})
-
 const blogSchema = new mongoose.Schema({
   title: String,
   author: String,
