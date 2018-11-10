@@ -5,6 +5,7 @@ const testData = require('./testdata')
 const Blog = require('../models/blog')
 const helper = require('./test_helpers')
 
+describe.skip('post and get', () => {
 beforeEach(async () => {
   await Blog.remove({})
 
@@ -14,7 +15,6 @@ beforeEach(async () => {
   }
 })
 
-//describe.skip('post and get', () => {
 test('add new blog', async () => {
   const blogsBefore = await helper.blogsInDb()
   const newBlog = testData.newBlog
@@ -88,7 +88,7 @@ test('a specific blog is within the returned blogs', async () => {
 
   expect(titles).toContain('React patterns')
 })
-//})
+
 
 test('a specific blog can be viewed', async () => {
   const resultAll = await api
@@ -131,9 +131,9 @@ test('a blog can be changed', async () => {
   const resultAll = await helper.blogsInDb()
 
   const aBlogFromAll = resultAll[0]
-  const changedBlog = {...aBlogFromAll, likes: aBlogFromAll.likes + 1}
+  const changedBlog = { ...aBlogFromAll, likes: aBlogFromAll.likes + 1 }
   const blogsBefore = await helper.blogsInDb()
-  const result = await api
+  await api
     .put(`/api/blogs/${aBlogFromAll.id}`)
     .send(changedBlog)
     .expect(200)
@@ -142,10 +142,12 @@ test('a blog can be changed', async () => {
   const modifiedBlog = await api
     .get(`/api/blogs/${aBlogFromAll.id}`)
 
-  expect(JSON.stringify(result.body)).toEqual(JSON.stringify(changedBlog))
+  expect(JSON.stringify(modifiedBlog.body)).toEqual(JSON.stringify(changedBlog))
   expect(blogsAfter.length).toBe(blogsBefore.length)
 })
 
 afterAll(() => {
   server.close()
+})
+
 })

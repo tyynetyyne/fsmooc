@@ -33,7 +33,7 @@ const bestBlogMany = {
   likes: 12
 }
 
-//describe.skip('list helpers', () => {
+describe.skip('list helpers', () => {
 
 test('dummy is called', () => {
   const blogs = []
@@ -136,5 +136,5 @@ describe('most likes', () => {
     const result = listHelper.mostLikes(testData.zeroBlogs)
     expect(result).toBe(null)
   })
-//})
+})
 })

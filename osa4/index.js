@@ -8,6 +8,7 @@ const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const Blog = require('./models/blog')
 const Router = require('./controllers/blogrouter')
+const usersRouter = require('./controllers/userrouter')
 //const morgan = require('morgan')
 
 mongoose
@@ -27,6 +28,7 @@ app.use(middleware.logger)
 //app.use(morgan(':method :url :myname :status :res[content-length] - :response-time ms'))
 
 app.use('/api/blogs', Router)
+app.use('/api/users', usersRouter)
 
 app.use(middleware.error)
 
