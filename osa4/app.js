@@ -15,6 +15,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
 app.use(middleware.logger)
+app.use(middleware.tokenExtractor)
 //morgan.token('myname', function (req) { return JSON.stringify(req.body) })
 //app.use(morgan(':method :url :myname :status :res[content-length] - :response-time ms'))
 
