@@ -7,6 +7,7 @@ const helper = require('./test_helpers')
 const User = require('../models/user')
 const { nonExistingId, blogsInDb, usersInDb } = require('./test_helpers')
 
+//describe.skip('user tests', () => {
 describe.only('when there is initially one user at db', async () => {
   beforeAll(async () => {
     await User.remove({})
@@ -105,9 +106,9 @@ describe.only('when there is initially one user at db', async () => {
     expect(foundUser.adult).toBe(true)
   })
 
-
-afterAll(() => {
-  server.close()
+  afterAll(() => {
+    server.close()
+  })
 })
 
-})
+

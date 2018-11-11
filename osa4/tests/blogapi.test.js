@@ -1,15 +1,26 @@
 const supertest = require('supertest')
-const { app, server } = require('../index')
-const api = supertest(app)
+//const { app, server } = require('../index')
+//const api = supertest(app)
 const testData = require('./testdata')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helpers')
 
 describe.skip('post and get', () => {
 beforeEach(async () => {
   await Blog.remove({})
 
-  for (let blog of testData.initialBlogs) {
+  await User.remove({})
+
+  const userObject = new User(testData.testUser)
+
+  const addedUser = await userObject.save()
+
+  const testBlogs = testData.initialBlogs.map(b => {
+    return { ...b,  user : addedUser.id }
+  })
+
+  for (let blog of testBlogs) {
     let blogObject = new Blog(blog)
     await blogObject.save()
   }
@@ -17,8 +28,12 @@ beforeEach(async () => {
 
 test('add new blog', async () => {
   const blogsBefore = await helper.blogsInDb()
-  const newBlog = testData.newBlog
+  const usersBefore = await helper.usersInDb()
 
+  const newBlog = { ...testData.newBlog, user : usersBefore[0].id }
+
+  //console.log('testData', newBlog)
+  //console.log('first user', usersBefore[0])
   await api
     .post('/api/blogs')
     .send(newBlog)
@@ -35,7 +50,10 @@ test('add new blog', async () => {
 
 test('add new blog without url and title', async () => {
   const blogsBefore = await helper.blogsInDb()
-  const newBlog = testData.newBlogNoTitleNoUrl
+
+  const usersBefore = await helper.usersInDb()
+
+  const newBlog = { ...testData.newBlogNoTitleNoUrl, user : usersBefore[0].id }
 
   await api
     .post('/api/blogs')
@@ -49,7 +67,10 @@ test('add new blog without url and title', async () => {
 
 test('add new blog without likes, set likes to zero', async () => {
   const blogsBefore = await helper.blogsInDb()
-  const newBlog = testData.newBlogNoLikes
+
+  const usersBefore = await helper.usersInDb()
+
+  const newBlog = { ...testData.newBlogNoLikes, user : usersBefore[0].id }
 
   const response = await api
     .post('/api/blogs')
@@ -107,7 +128,9 @@ test('a specific blog can be viewed', async () => {
 })
 
 test('a blog can be deleted', async () => {
-  const newBlog = testData.newBlog
+  const usersBefore = await helper.usersInDb()
+
+  const newBlog = { ...testData.newBlog, user : usersBefore[0].id }
 
   const addedBlog = await api
     .post('/api/blogs')
@@ -146,8 +169,8 @@ test('a blog can be changed', async () => {
   expect(blogsAfter.length).toBe(blogsBefore.length)
 })
 
-afterAll(() => {
-  server.close()
-})
+// afterAll(() => {
+//   server.close()
+// })
 
 })

@@ -80,6 +80,13 @@ const newBlogNoLikes = {
 const initialBlogs = manyBlogs
 const zeroBlogs = []
 
+const testUser = {
+  username: 'testUser',
+  password: 'jeejee',
+  adult: true,
+  name: 'Jenni Salminen'
+}
+
 module.exports = {
   oneBlog,
   manyBlogs,
@@ -87,5 +94,6 @@ module.exports = {
   newBlog,
   initialBlogs,
   newBlogNoTitleNoUrl,
-  newBlogNoLikes
+  newBlogNoLikes,
+  testUser
 }
