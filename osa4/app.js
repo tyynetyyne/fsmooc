@@ -8,6 +8,7 @@ const middleware = require('./utils/middleware')
 const Blog = require('./models/blog')
 const Router = require('./controllers/blogrouter')
 const usersRouter = require('./controllers/userrouter')
+const loginRouter = require('./controllers/login')
 //const morgan = require('morgan')
 
 app.use(cors())
@@ -19,6 +20,7 @@ app.use(middleware.logger)
 
 app.use('/api/blogs', Router)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middleware.error)
 

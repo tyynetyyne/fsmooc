@@ -1,6 +1,15 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
 
 blogRouter.get('/', async (request, response) => {
   try {
@@ -36,6 +45,12 @@ blogRouter.delete('/:id', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
   try{
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
     const body = request.body
     if (body.url === undefined) {
       return response.status(400).json({ error: 'url missing' })
@@ -49,7 +64,9 @@ blogRouter.post('/', async (request, response) => {
     if (body.user === undefined) {
       return response.status(400).json({ error: 'user missing' })
     }
-    const user = await User.findById(body.user)
+    
+    //const user = await User.findById(body.user)
+    const user = await User.findById(decodedToken.id)
 
     const blog = new Blog({
       title: body.title,
@@ -66,8 +83,12 @@ blogRouter.post('/', async (request, response) => {
 
     response.status(201).json(Blog.format(savedBlog))
   } catch(exception) {
-    console.log('save failed')
-    response.status(500).end()
+    if (exception.name === 'JsonWebTokenError' ) {
+      response.status(401).json({ error: exception.message })
+    } else {
+      console.log('save failed')
+      response.status(500).end()
+    }
   }
 })
 
