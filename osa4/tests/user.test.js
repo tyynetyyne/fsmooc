@@ -60,9 +60,54 @@ describe.only('when there is initially one user at db', async () => {
 
     const usersAfterOperation = await usersInDb()
     expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
-})
-})
+  })
+
+  test('POST /api/users fails with proper statuscode and message if password too short', async () => {
+    const usersBeforeOperation = await usersInDb()
+
+    const newUser = {
+      username: 'tyyppi',
+      name: 'Antti Jussila',
+      password: 'sa',
+      adult: true
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body).toEqual({ error: 'password must be at least 3 characters long' })
+
+    const usersAfterOperation = await usersInDb()
+    expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
+  })
+
+  test('POST /api/users succeeds with a fresh username, without adult flag', async () => {
+    const usersBeforeOperation = await usersInDb()
+
+    const newUser = {
+      username: 'juusela',
+      name: 'Jussi Juusela',
+      password: 'wtf'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAfterOperation = await usersInDb()
+    expect(usersAfterOperation.length).toBe(usersBeforeOperation.length + 1)
+    const foundUser = usersAfterOperation.find(u => u.username === 'juusela')
+    expect(foundUser.adult).toBe(true)
+  })
+
 
 afterAll(() => {
   server.close()
+})
+
 })

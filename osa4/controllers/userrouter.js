@@ -6,9 +6,17 @@ usersRouter.post('/', async (request, response) => {
   try {
     const body = request.body
 
-    const existingUser = await User.find({username: body.username})
+    if ((body.username === undefined) || body.username.length < 3 ) {
+      return response.status(400).json({ error: 'username must be at least 3 characters long' })
+    }
+
+    const existingUser = await User.find({ username: body.username })
     if (existingUser.length > 0) {
       return response.status(400).json({ error: 'username must be unique' })
+    }
+
+    if ((body.password === undefined) || body.password.length < 3 ) {
+      return response.status(400).json({ error: 'password must be at least 3 characters long' })
     }
 
     const saltRounds = 10
@@ -16,9 +24,9 @@ usersRouter.post('/', async (request, response) => {
 
     const user = new User({
       username: body.username,
-      name: body.name,
+      name: body.name === undefined ? '' : body.name,
       passwordHash,
-      adult: body.adult
+      adult: body.adult === undefined ? true : body.adult
     })
 
     const savedUser = await user.save()
