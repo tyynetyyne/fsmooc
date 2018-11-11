@@ -1,15 +1,7 @@
 const http = require('http')
-const express = require('express')
-const app = express()
-const bodyParser = require('body-parser')
-const cors = require('cors')
+const app = require('./app')
 const mongoose = require('mongoose')
-const middleware = require('./utils/middleware') 
 const config = require('./utils/config')
-const Blog = require('./models/blog')
-const Router = require('./controllers/blogrouter')
-const usersRouter = require('./controllers/userrouter')
-//const morgan = require('morgan')
 
 mongoose
   .connect(config.mongoUrl, { useNewUrlParser: true })
@@ -20,17 +12,7 @@ mongoose
     console.log(err)
   })
 
-app.use(cors())
-app.use(bodyParser.json())
-app.use(express.static('build'))
-app.use(middleware.logger)
-//morgan.token('myname', function (req) { return JSON.stringify(req.body) })
-//app.use(morgan(':method :url :myname :status :res[content-length] - :response-time ms'))
-
-app.use('/api/blogs', Router)
-app.use('/api/users', usersRouter)
-
-app.use(middleware.error)
+//console.log('createServer', app)
 
 const server = http.createServer(app)
 
@@ -39,9 +21,8 @@ server.listen(config.port, () => {
 })
 
 server.on('close', () => {
+  console.log('connection close')
   mongoose.connection.close()
 })
 
-module.exports = {
-  app, server
-}
+

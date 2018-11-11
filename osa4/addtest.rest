@@ -6,5 +6,5 @@ content-type: application/json
     "author": "Michael Chan",
     "url": "https://reactpatterns.com/",
     "likes": 7,
-    "user": "5be849a6d858b81c88886df4"
+    "user": "5be8509fb8019d351820e86c"
   }

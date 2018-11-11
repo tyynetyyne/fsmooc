@@ -37,7 +37,6 @@ blogRouter.delete('/:id', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
   try{
     const body = request.body
-    console.log('adding', request.body)
     if (body.url === undefined) {
       return response.status(400).json({ error: 'url missing' })
     }

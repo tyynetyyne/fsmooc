@@ -1,5 +1,5 @@
 const supertest = require('supertest')
-const { app, server } = require('../index')
+const app  = require('../app')
 const api = supertest(app)
 const testData = require('./testdata')
 const Blog = require('../models/blog')
@@ -7,10 +7,24 @@ const helper = require('./test_helpers')
 const User = require('../models/user')
 const { nonExistingId, blogsInDb, usersInDb } = require('./test_helpers')
 
+const mongoose = require('mongoose')
+const config = require('../utils/config')
+
 //describe.skip('user tests', () => {
 describe.only('when there is initially one user at db', async () => {
+
   beforeAll(async () => {
+    await mongoose.connect(config.mongoUrl)
+  })
+
+  afterAll(async () => {
+    await mongoose.connection.close()
+  })
+
+  beforeEach(async () => {
     await User.remove({})
+    await Blog.remove({})
+
     const user = new User({ 
       username: 'root',
       password: 'sekret',
@@ -106,9 +120,6 @@ describe.only('when there is initially one user at db', async () => {
     expect(foundUser.adult).toBe(true)
   })
 
-  afterAll(() => {
-    server.close()
-  })
 })
 
 

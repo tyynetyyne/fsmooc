@@ -1,12 +1,22 @@
 const supertest = require('supertest')
-//const { app, server } = require('../index')
-//const api = supertest(app)
+const app  = require('../app')
+const api = supertest(app)
 const testData = require('./testdata')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const helper = require('./test_helpers')
+const mongoose = require('mongoose')
+const config = require('../utils/config')
 
-describe.skip('post and get', () => {
+beforeAll(async () => {
+  await mongoose.connect(config.mongoUrl)
+})
+
+afterAll(async () => {
+  await mongoose.connection.close()
+})
+
+//describe.skip('post and get', () => {
 beforeEach(async () => {
   await Blog.remove({})
 
@@ -169,8 +179,4 @@ test('a blog can be changed', async () => {
   expect(blogsAfter.length).toBe(blogsBefore.length)
 })
 
-// afterAll(() => {
-//   server.close()
-// })
-
-})
+//})
