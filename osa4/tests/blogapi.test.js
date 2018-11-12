@@ -7,9 +7,10 @@ const User = require('../models/user')
 const helper = require('./test_helpers')
 const mongoose = require('mongoose')
 const config = require('../utils/config')
+const bcrypt = require('bcrypt')
 
 beforeAll(async () => {
-  await mongoose.connect(config.mongoUrl)
+  await mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
 })
 
 afterAll(async () => {
@@ -18,12 +19,15 @@ afterAll(async () => {
 
 //describe.skip('post and get', () => {
 beforeEach(async () => {
-  await Blog.remove({})
+  
+  await Blog.deleteMany({})
+  await User.deleteMany({})
 
-  await User.remove({})
-
-  const userObject = new User(testData.testUser)
-
+  const newUser = testData.testUser
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(newUser.password, saltRounds)
+  const newUserAndHash = { ...newUser,  passwordHash: passwordHash }
+  const userObject = new User(newUserAndHash)
   const addedUser = await userObject.save()
 
   const testBlogs = testData.initialBlogs.map(b => {
@@ -36,16 +40,33 @@ beforeEach(async () => {
   }
 })
 
+async function loginTestUser(){
+  try{
+  const loginData = {
+    username: testData.testUser.username,
+    password: testData.testUser.password
+  }
+
+  const response = await api
+    .post('/api/login')
+    .send(loginData)
+
+  return response.body.token
+  } catch (exception){
+    console.log('token error in login', exception)
+  }
+}
+
 test('add new blog', async () => {
   const blogsBefore = await helper.blogsInDb()
-  const usersBefore = await helper.usersInDb()
 
-  const newBlog = { ...testData.newBlog, user : usersBefore[0].id }
+  const newBlog = testData.newBlog
 
-  //console.log('testData', newBlog)
-  //console.log('first user', usersBefore[0])
+  const token = await loginTestUser()
+
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -58,15 +79,16 @@ test('add new blog', async () => {
   expect(titles).toContain('Koodauksen ABC')
 })
 
+
 test('add new blog without url and title', async () => {
   const blogsBefore = await helper.blogsInDb()
 
-  const usersBefore = await helper.usersInDb()
-
-  const newBlog = { ...testData.newBlogNoTitleNoUrl, user : usersBefore[0].id }
-
+  const newBlog = testData.newBlogNoTitleNoUrl
+  const token = await loginTestUser()
+  
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(400)
     .expect('Content-Type', /application\/json/)
@@ -80,10 +102,12 @@ test('add new blog without likes, set likes to zero', async () => {
 
   const usersBefore = await helper.usersInDb()
 
-  const newBlog = { ...testData.newBlogNoLikes, user : usersBefore[0].id }
+  const newBlog = testData.newBlogNoLikes
+  const token = await loginTestUser()
 
   const response = await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -138,17 +162,18 @@ test('a specific blog can be viewed', async () => {
 })
 
 test('a blog can be deleted', async () => {
-  const usersBefore = await helper.usersInDb()
-
-  const newBlog = { ...testData.newBlog, user : usersBefore[0].id }
-
+  const newBlog = testData.newBlog
+  const token = await loginTestUser()
+  
   const addedBlog = await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
 
   const blogsBefore = await helper.blogsInDb()
   await api
     .delete(`/api/blogs/${addedBlog.body.id}`)
+    .set('Authorization', `Bearer ${token}`)
     .expect(204)
 
   const blogsAfter = await helper.blogsInDb()
@@ -162,12 +187,14 @@ test('a blog can be deleted', async () => {
 test('a blog can be changed', async () => {
 
   const resultAll = await helper.blogsInDb()
-
+  const token = await loginTestUser()
   const aBlogFromAll = resultAll[0]
   const changedBlog = { ...aBlogFromAll, likes: aBlogFromAll.likes + 1 }
   const blogsBefore = await helper.blogsInDb()
+  
   await api
     .put(`/api/blogs/${aBlogFromAll.id}`)
+    .set('Authorization', `Bearer ${token}`)
     .send(changedBlog)
     .expect(200)
 

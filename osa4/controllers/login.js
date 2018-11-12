@@ -6,12 +6,7 @@ const User = require('../models/user')
 loginRouter.post('/', async (request, response) => {
   const body = request.body
 
-  //console.log('loginrouter', body)
-
   const user = await User.findOne({ username: body.username })
-
-  //console.log('user', user)
-  //console.log('passwordhash', user.passwordHash)
 
   const passwordCorrect = user === null ?
     false :
@@ -21,13 +16,11 @@ loginRouter.post('/', async (request, response) => {
     return response.status(401).send({ error: 'invalid username or password' })
   }
 
+
   const userForToken = {
     username: user.username,
     id: user._id
   }
-
-  //console.log('userForToken', userForToken)
-  //console.log('secred', process.env.SECRET)
 
   const token = jwt.sign(userForToken, process.env.SECRET)
 

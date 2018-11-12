@@ -22,7 +22,7 @@ usersRouter.post('/', async (request, response) => {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
-    //console.log('passwordHash', passwordHash)
+    //console.log('passwordHash userRouterissa', passwordHash)
 
     const user = new User({
       username: body.username,
@@ -33,6 +33,8 @@ usersRouter.post('/', async (request, response) => {
     })
 
     const savedUser = await user.save()
+
+    //console.log('savedUser juuri saven jälkeen', savedUser)
 
     response.json(User.format(savedUser))
   } catch (exception) {

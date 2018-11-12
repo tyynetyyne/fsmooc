@@ -14,7 +14,7 @@ const config = require('../utils/config')
 describe.only('when there is initially one user at db', async () => {
 
   beforeAll(async () => {
-    await mongoose.connect(config.mongoUrl)
+    await mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
   })
 
   afterAll(async () => {
@@ -22,14 +22,15 @@ describe.only('when there is initially one user at db', async () => {
   })
 
   beforeEach(async () => {
-    await User.remove({})
-    await Blog.remove({})
+    await Blog.deleteMany({})
+    await User.deleteMany({})
 
-    const user = new User({ 
+    const user = new User({
       username: 'root',
       password: 'sekret',
       adult: true,
-      name: 'True Hacker' })
+      name: 'True Hacker' 
+    })
     await user.save()
   })
 
@@ -119,7 +120,4 @@ describe.only('when there is initially one user at db', async () => {
     const foundUser = usersAfterOperation.find(u => u.username === 'juusela')
     expect(foundUser.adult).toBe(true)
   })
-
 })
-
-

@@ -3,14 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-// const getTokenFrom = (request) => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
-
 blogRouter.get('/', async (request, response) => {
   try {
     const blogs = await Blog.find({})
@@ -36,10 +28,21 @@ blogRouter.get('/:id', async (request, response) => {
 
 blogRouter.delete('/:id', async (request, response) => {
   try{
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const blog = await Blog.findById(request.params.id)
+
+    if(decodedToken.id.toString() === blog.user.toString()){
+      await Blog.findByIdAndRemove(request.params.id)
+      response.status(204).end()
+    } else {
+      response.status(400).send({ error: 'not authorized' })
+    }
   } catch (exception) {
-    response.status(400).send({ error: 'malformatted id' })
+    if (exception.name === 'JsonWebTokenError' ) {
+      response.status(401).json({ error: exception.message })
+    } else {
+      response.status(400).send({ error: 'malformatted id' })
+    }
   }
 })
 
@@ -63,9 +66,6 @@ blogRouter.post('/', async (request, response) => {
     if (body.author === undefined) {
       return response.status(400).json({ error: 'author missing' })
     }
-    if (body.user === undefined) {
-      return response.status(400).json({ error: 'user missing' })
-    }
     
     const user = await User.findById(decodedToken.id)
 
@@ -74,7 +74,7 @@ blogRouter.post('/', async (request, response) => {
       author: body.author,
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes,
-      user: body.user
+      user: user
     })
 
     const savedBlog = await blog.save()
@@ -95,6 +95,15 @@ blogRouter.post('/', async (request, response) => {
 
 blogRouter.put('/:id', async (request, response) => {
   try{
+    const token = request.token
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const storedBlog = await Blog.findById(request.params.id)
+
     const body = request.body
 
     const blog = {
@@ -103,8 +112,12 @@ blogRouter.put('/:id', async (request, response) => {
       url: body.url,
       likes: body.likes
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    response.status(200).json(Blog.format(updatedBlog))
+    if(decodedToken.id.toString() === storedBlog.user.toString()){
+      const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+      response.status(200).json(Blog.format(updatedBlog))
+    } else {
+      response.status(400).send({ error: 'not authorized' })
+    }
   } catch (exception){
     response.status(400).send({ error: 'malformatted id' })
   }
