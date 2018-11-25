@@ -1,5 +1,5 @@
 import React from 'react'
-import { Blog, Notification } from './components/Blog'
+import { Blog, Notification, LoggedInUser } from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -21,6 +21,17 @@ class App extends React.Component {
 
   componentDidMount() {
     blogService.getAll().then(blogs => this.setState({ blogs }))
+
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user })
+    }
+  }
+
+  handleLogout() {
+    window.localStorage.removeItem('loggedBlogappUser')
+    this.setState({ user: null })
   }
 
   addBlog = event => {
@@ -57,6 +68,7 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password,
       })
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       this.setState({ username: '', password: '', user })
     } catch (exception) {
       this.setState({
@@ -140,7 +152,10 @@ class App extends React.Component {
       <div>
         <h1>Blogs</h1>
         <Notification message={this.state.error} />
-        {<h2>{this.state.user.name} logged in</h2>}
+        <LoggedInUser
+          user={this.state.user}
+          logoutHandler={this.handleLogout.bind(this)}
+        />
         {this.blogForm()}
 
         <h2>Blogs in the database</h2>
