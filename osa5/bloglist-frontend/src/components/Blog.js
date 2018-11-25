@@ -25,4 +25,108 @@ const LoggedInUser = ({ user, logoutHandler }) => {
   )
 }
 
-export { Blog, Notification, LoggedInUser }
+class Togglable extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      visible: false,
+    }
+  }
+
+  toggleVisibility = () => {
+    this.setState({ visible: !this.state.visible })
+  }
+
+  render() {
+    const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
+    const showWhenVisible = { display: this.state.visible ? '' : 'none' }
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={this.toggleVisibility}>
+            {this.props.buttonLabel}
+          </button>
+        </div>
+        <div style={showWhenVisible}>
+          {this.props.children}
+          <button onClick={this.toggleVisibility}>cancel</button>
+        </div>
+      </div>
+    )
+  }
+}
+
+const BlogForm = ({ addBlog, handleChange, newTitle, newAuthor, newUrl }) => {
+  return (
+    <div>
+      <h2>New blog</h2>
+      <form onSubmit={addBlog}>
+        <div>
+          Title:
+          <input value={newTitle} name="newTitle" onChange={handleChange} />
+        </div>
+        <div>
+          Author:
+          <input value={newAuthor} name="newAuthor" onChange={handleChange} />
+        </div>
+        <div>
+          Url:
+          <input value={newUrl} name="newUrl" onChange={handleChange} />
+        </div>
+        <button type="submit">save</button>
+      </form>
+    </div>
+  )
+}
+
+const LoginForm = ({
+  handleSubmit,
+  handleChange,
+  username,
+  password,
+  loginVisible,
+  toggleVisibility,
+}) => {
+  const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+  const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+  return (
+    <div>
+      <h2>Login to see blogs</h2>
+      <div style={hideWhenVisible}>
+        <button type="login" onClick={toggleVisibility}>
+          log in
+        </button>
+      </div>
+      <div style={showWhenVisible}>
+        <form onSubmit={handleSubmit}>
+          <div>
+            username
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            password
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+            />
+          </div>
+          <button type="submit">login</button>
+        </form>
+        <button type="cancel" onClick={toggleVisibility}>
+          cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export { Blog, Notification, LoggedInUser, LoginForm, BlogForm, Togglable }
