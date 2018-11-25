@@ -2,6 +2,7 @@ import React from 'react'
 import { Blog, Notification, LoggedInUser } from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './blog.css'
 
 class App extends React.Component {
   constructor(props) {
