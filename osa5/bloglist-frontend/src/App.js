@@ -4,20 +4,22 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import './blog.css'
 
+const initialState = {
+  blogs: [],
+  newTitle: '',
+  newAuthor: '',
+  newUrl: '',
+  error: null,
+  info: null,
+  username: '',
+  password: '',
+  user: null,
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      blogs: [],
-      newTitle: '',
-      newAuthor: '',
-      newUrl: '',
-      // showAll: true,
-      error: null,
-      username: '',
-      password: '',
-      user: null,
-    }
+    this.state = initialState
   }
 
   componentDidMount() {
@@ -27,27 +29,42 @@ class App extends React.Component {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
+      blogService.setToken(user.token)
     }
   }
 
   handleLogout() {
     window.localStorage.removeItem('loggedBlogappUser')
-    this.setState({ user: null })
+    this.setState({ ...initialState, blogs: this.state.blogs })
   }
 
-  addBlog = event => {
+  addBlog = async event => {
     event.preventDefault()
-    const blogObject = {
-      url: this.state.newUrl,
-      title: this.state.newTitle,
-      author: this.state.newAuthor,
-    }
-    blogService.create(blogObject).then(newBlog => {
+
+    try {
+      const blogObject = {
+        url: this.state.newUrl,
+        title: this.state.newTitle,
+        author: this.state.newAuthor,
+      }
+      const addedBlog = await blogService.create(blogObject)
+      //console.log('response', addedBlog)
       this.setState({
-        blogs: this.state.blogs.concat(newBlog),
+        blogs: this.state.blogs.concat(addedBlog),
         newBlog: '',
+        info: `Blog ${addedBlog.title} was added to server`,
       })
-    })
+      setTimeout(() => {
+        this.setState({ info: null })
+      }, 5000)
+    } catch (exception) {
+      this.setState({
+        error: 'not authorized, blog was not added',
+      })
+      setTimeout(() => {
+        this.setState({ error: null })
+      }, 5000)
+    }
   }
 
   handleLoginFieldChange = event => {
@@ -57,10 +74,6 @@ class App extends React.Component {
   handleBlogFieldChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
-
-  // toggleVisible = () => {
-  //   this.setState({ showAll: !this.state.showAll });
-  // };
 
   login = async event => {
     event.preventDefault()
@@ -73,8 +86,9 @@ class App extends React.Component {
       blogService.setToken(user.token)
       this.setState({ username: '', password: '', user })
     } catch (exception) {
+      //console.log('login failed', exception)
       this.setState({
-        error: 'username of password invalid',
+        error: 'username or password invalid',
       })
       setTimeout(() => {
         this.setState({ error: null })
@@ -148,22 +162,29 @@ class App extends React.Component {
 
   render() {
     if (this.state.user === null) {
-      return <div>{this.loginForm()}</div>
+      return (
+        <div>
+          <Notification message={this.state.error} type="error" />
+          <Notification message={this.state.info} type="info" />
+          {this.loginForm()}
+        </div>
+      )
     }
     return (
       <div>
         <h1>Blogs</h1>
-        <Notification message={this.state.error} />
+        <Notification message={this.state.error} type="error" />
+        <Notification message={this.state.info} type="info" />
         <LoggedInUser
           user={this.state.user}
           logoutHandler={this.handleLogout.bind(this)}
         />
         {this.blogForm()}
-
         <h2>Blogs in the database</h2>
-        {this.state.blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+        {this.state.blogs.map(blog => {
+          //console.log('blog', blog)
+          return <Blog key={blog.id} blog={blog} />
+        })}
       </div>
     )
   }
