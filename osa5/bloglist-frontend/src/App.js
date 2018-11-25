@@ -38,8 +38,8 @@ class App extends React.Component {
     event.preventDefault()
     const blogObject = {
       url: this.state.newUrl,
-      title: this.state.title,
-      author: this.state.author,
+      title: this.state.newTitle,
+      author: this.state.newAuthor,
     }
     blogService.create(blogObject).then(newBlog => {
       this.setState({
@@ -69,6 +69,7 @@ class App extends React.Component {
         password: this.state.password,
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       this.setState({ username: '', password: '', user })
     } catch (exception) {
       this.setState({
