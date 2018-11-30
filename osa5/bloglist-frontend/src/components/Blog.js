@@ -57,6 +57,50 @@ class Togglable extends React.Component {
   }
 }
 
+class TogglableArea extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      visible: false,
+    }
+  }
+
+  toggleVisibility = () => {
+    this.setState({ visible: !this.state.visible })
+  }
+
+  render() {
+    const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
+    const showWhenVisible = { display: this.state.visible ? '' : 'none' }
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <p onClick={this.toggleVisibility}>
+            {this.props.children.props.blog.title}
+            {this.props.children.props.blog.author}
+          </p>
+        </div>
+        <div style={showWhenVisible}>
+          {/* {console.log('props', this.props.children.props.blog)} */}
+          <p onClick={this.toggleVisibility}>
+            {this.props.children.props.blog.title}
+            {this.props.children.props.blog.author}
+            <br />
+            <a href={this.props.children.props.blog.url}>
+              {this.props.children.props.blog.url}
+            </a>
+            <br />
+            {this.props.children.props.blog.likes} <button>like</button>
+            <br />
+            Added by {this.props.children.props.blog.user.name}
+          </p>
+        </div>
+      </div>
+    )
+  }
+}
+
 const BlogForm = ({ addBlog, handleChange, newTitle, newAuthor, newUrl }) => {
   return (
     <div>
@@ -129,4 +173,12 @@ const LoginForm = ({
   )
 }
 
-export { Blog, Notification, LoggedInUser, LoginForm, BlogForm, Togglable }
+export {
+  Blog,
+  Notification,
+  LoggedInUser,
+  LoginForm,
+  BlogForm,
+  Togglable,
+  TogglableArea,
+}

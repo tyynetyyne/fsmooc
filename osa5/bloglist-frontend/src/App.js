@@ -6,6 +6,7 @@ import {
   LoginForm,
   BlogForm,
   Togglable,
+  TogglableArea,
 } from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -112,6 +113,14 @@ class App extends React.Component {
   }
 
   render() {
+    const blogStyle = {
+      paddingTop: 10,
+      paddingLeft: 2,
+      border: 'solid',
+      borderWidth: 1,
+      marginBottom: 5,
+    }
+
     if (this.state.user === null) {
       return (
         <div>
@@ -147,9 +156,16 @@ class App extends React.Component {
           />
         </Togglable>
         <h2>Blogs in the database</h2>
+
         {this.state.blogs.map(blog => {
           //console.log('blog', blog)
-          return <Blog key={blog.id} blog={blog} />
+          return (
+            <div style={blogStyle} key={blog.id}>
+              <TogglableArea>
+                <Blog blog={blog} />
+              </TogglableArea>
+            </div>
+          )
         })}
       </div>
     )
