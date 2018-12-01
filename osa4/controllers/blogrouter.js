@@ -131,7 +131,7 @@ blogRouter.put('/:id', async (request, response) => {
       response.status(200).json(Blog.format(updatedBlog))
     } else {
       //response.status(400).send({ error: 'not authorized' })
-      console.log('not the user', blogOnlyLikesChanged)
+      // console.log('not the user', blogOnlyLikesChanged)
       const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
         blogOnlyLikesChanged,
