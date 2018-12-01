@@ -16,6 +16,10 @@ const LogoutButton = ({ logoutHandler }) => {
   return <button onClick={logoutHandler}>Logout</button>
 }
 
+const DeleteButton = ({ deleteHandler }) => {
+  return <button onClick={deleteHandler}>Delete</button>
+}
+
 const LoggedInUser = ({ user, logoutHandler }) => {
   return (
     <div>
@@ -82,7 +86,6 @@ class TogglableArea extends React.Component {
           </p>
         </div>
         <div style={showWhenVisible}>
-          {/* {console.log('props', this.props.likeHandler(this.props.blog.id))} */}
           <p onClick={this.toggleVisibility}>
             {this.props.blog.title} {this.props.blog.author}
             <br />
@@ -93,7 +96,14 @@ class TogglableArea extends React.Component {
               like
             </button>
             <br />
-            Added by {this.props.blog.user.name}
+            Added by{' '}
+            {this.props.blog.user === undefined
+              ? 'anonymous'
+              : this.props.blog.user.name}
+            <br />
+            <DeleteButton
+              deleteHandler={this.props.deleteHandler(this.props.blog.id)}
+            />
           </p>
         </div>
       </div>

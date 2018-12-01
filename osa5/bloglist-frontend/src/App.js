@@ -52,6 +52,43 @@ class App extends React.Component {
     this.setState({ loginVisible: this.state.loginVisible ? false : true })
   }
 
+  handleDelete = id => {
+    return async () => {
+      try {
+        const thisBlog = this.state.blogs.find(blog => {
+          return blog.id === id
+        })
+        if (
+          window.confirm(
+            `Do you want to remove ${thisBlog.title} by ${
+              thisBlog.author
+            } from the server?`
+          )
+        ) {
+          await blogService.remove(id)
+          this.setState({
+            blogs: this.state.blogs.filter(b => b.id !== id),
+            newAuthor: '',
+            newUrl: '',
+            newTitle: '',
+            info: `Blog was removed from server`,
+          })
+          setTimeout(() => {
+            this.setState({ info: null })
+          }, 5000)
+        }
+      } catch (exception) {
+        console.log('error', exception)
+        this.setState({
+          error: 'Not authorized, blog was not removed from server',
+        })
+        setTimeout(() => {
+          this.setState({ error: null })
+        }, 5000)
+      }
+    }
+  }
+
   handleLike = id => {
     return async () => {
       try {
@@ -218,6 +255,7 @@ class App extends React.Component {
               <TogglableArea
                 blog={blog}
                 likeHandler={this.handleLike.bind(this)}
+                deleteHandler={this.handleDelete.bind(this)}
               />
             </div>
           )
