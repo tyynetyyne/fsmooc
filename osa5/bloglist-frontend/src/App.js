@@ -168,6 +168,12 @@ class App extends React.Component {
       borderWidth: 1,
       marginBottom: 5,
     }
+    var sortedBlogs = [...this.state.blogs]
+    sortedBlogs = sortedBlogs.sort((blog1, blog2) => {
+      return blog2.likes - blog1.likes
+    })
+
+    //console.log('sorted', sortedBlogs)
 
     if (this.state.user === null) {
       return (
@@ -205,7 +211,7 @@ class App extends React.Component {
         </Togglable>
         <h2>Blogs in the database</h2>
 
-        {this.state.blogs.map(blog => {
+        {sortedBlogs.map(blog => {
           //console.log('blog', blog)
           return (
             <div style={blogStyle} key={blog.id}>
