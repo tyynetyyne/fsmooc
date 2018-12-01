@@ -112,17 +112,25 @@ blogRouter.put('/:id', async (request, response) => {
 
     const body = request.body
 
-    const blogFullUpdate = {
-      title: body.title,
-      author: body.author,
-      url: body.url,
-      likes: body.likes,
-      user: body.user,
-    }
+    console.log('body', body)
 
     const blogOnlyLikesChanged = { ...storedBlog._doc, likes: body.likes }
 
-    if (decodedToken.id.toString() === storedBlog.user.toString()) {
+    if (storedBlog.user === undefined) {
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        request.params.id,
+        blogOnlyLikesChanged,
+        { new: true }
+      )
+      response.status(200).json(Blog.format(updatedBlog))
+    } else if (decodedToken.id.toString() === storedBlog.user.toString()) {
+      const blogFullUpdate = {
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes,
+        user: body.user,
+      }
       const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
         blogFullUpdate,
@@ -130,8 +138,6 @@ blogRouter.put('/:id', async (request, response) => {
       )
       response.status(200).json(Blog.format(updatedBlog))
     } else {
-      //response.status(400).send({ error: 'not authorized' })
-      // console.log('not the user', blogOnlyLikesChanged)
       const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
         blogOnlyLikesChanged,
