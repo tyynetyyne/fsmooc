@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Blog,
+  // Blog,
   Notification,
   LoggedInUser,
   LoginForm,
@@ -52,26 +52,52 @@ class App extends React.Component {
     this.setState({ loginVisible: this.state.loginVisible ? false : true })
   }
 
-  handleLike = async id => {
+  handleLike = id => {
     return async () => {
       try {
-        const thisBlog = this.state.blogs.find(id)
+        const thisBlog = this.state.blogs.find(blog => {
+          return blog.id === id
+        })
+
         const blogObject = {
           url: thisBlog.url,
           title: thisBlog.title,
           author: thisBlog.author,
           likes: thisBlog.likes + 1,
-          user: thisBlog.user,
+          user: thisBlog.user._id,
         }
-        const updatedBlog = await blogService.update(blogObject)
-      } catch {
-        console.log('failed')
+
+        const updatedBlog = await blogService.update(id, blogObject)
+        const blogToBeStored = { ...updatedBlog, user: thisBlog.user }
+
+        var copyOfBlogs = [...this.state.blogs]
+
+        const indexOfBlog = this.state.blogs.findIndex(blog => {
+          return blog.id === id
+        })
+
+        copyOfBlogs[indexOfBlog] = blogToBeStored
+
+        this.setState({
+          blogs: copyOfBlogs,
+          newAuthor: '',
+          newUrl: '',
+          newTitle: '',
+          info: `Like was added to server`,
+        })
+
+        setTimeout(() => {
+          this.setState({ info: null })
+        }, 5000)
+      } catch (exception) {
+        this.setState({
+          error: 'Error, like was not added to server',
+        })
+        setTimeout(() => {
+          this.setState({ error: null })
+        }, 5000)
       }
     }
-  }
-
-  handleLike2 = () => {
-    console.log('hello world')
   }
 
   addBlog = async event => {
@@ -97,7 +123,7 @@ class App extends React.Component {
       }, 5000)
     } catch (exception) {
       this.setState({
-        error: 'not authorized, blog was not added',
+        error: 'Not authorized, blog was not added',
       })
       setTimeout(() => {
         this.setState({ error: null })
@@ -126,7 +152,7 @@ class App extends React.Component {
     } catch (exception) {
       //console.log('login failed', exception)
       this.setState({
-        error: 'username or password invalid',
+        error: 'Username or password invalid',
       })
       setTimeout(() => {
         this.setState({ error: null })
@@ -183,14 +209,10 @@ class App extends React.Component {
           //console.log('blog', blog)
           return (
             <div style={blogStyle} key={blog.id}>
-              <TogglableArea>
-                <Blog
-                  blog={blog}
-                  likeHandler={
-                    this.handleLike2
-                  } /*{this.handleLike.bind(this)}*/
-                />
-              </TogglableArea>
+              <TogglableArea
+                blog={blog}
+                likeHandler={this.handleLike.bind(this)}
+              />
             </div>
           )
         })}

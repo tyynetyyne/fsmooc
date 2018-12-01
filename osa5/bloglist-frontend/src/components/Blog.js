@@ -1,9 +1,9 @@
 import React from 'react'
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>
-)
+// const Blog = ({ blog }) => (
+//   <div>
+//     {blog.title} {blog.author}
+//   </div>
+// )
 
 const Notification = ({ message, type }) => {
   if (message === null) {
@@ -77,33 +77,23 @@ class TogglableArea extends React.Component {
       <div>
         <div style={hideWhenVisible}>
           <p onClick={this.toggleVisibility}>
-            {this.props.children.props.blog.title}
-            {this.props.children.props.blog.author}
+            {this.props.blog.title}
+            {this.props.blog.author}
           </p>
         </div>
         <div style={showWhenVisible}>
-          {/* {console.log('props', this.props.children.props.blog)} */}
+          {/* {console.log('props', this.props.likeHandler(this.props.blog.id))} */}
           <p onClick={this.toggleVisibility}>
-            {this.props.children.props.blog.title}
-            {this.props.children.props.blog.author}
+            {this.props.blog.title} {this.props.blog.author}
             <br />
-            <a href={this.props.children.props.blog.url}>
-              {this.props.children.props.blog.url}
-            </a>
+            <a href={this.props.blog.url}>{this.props.blog.url}</a>
             <br />
-            {this.props.children.props.blog.likes}{' '}
-            <button
-              onClick={
-                this.props.children.props
-                  .likeHandler /*this.props.children.props.likeHandler(
-                this.props.children.props.blog.id
-              ) */
-              }
-            >
+            Likes: {this.props.blog.likes}
+            <button onClick={this.props.likeHandler(this.props.blog.id)}>
               like
             </button>
             <br />
-            Added by {this.props.children.props.blog.user.name}
+            Added by {this.props.blog.user.name}
           </p>
         </div>
       </div>
@@ -184,7 +174,7 @@ const LoginForm = ({
 }
 
 export {
-  Blog,
+  // Blog,
   Notification,
   LoggedInUser,
   LoginForm,
