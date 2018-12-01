@@ -52,6 +52,28 @@ class App extends React.Component {
     this.setState({ loginVisible: this.state.loginVisible ? false : true })
   }
 
+  handleLike = async id => {
+    return async () => {
+      try {
+        const thisBlog = this.state.blogs.find(id)
+        const blogObject = {
+          url: thisBlog.url,
+          title: thisBlog.title,
+          author: thisBlog.author,
+          likes: thisBlog.likes + 1,
+          user: thisBlog.user,
+        }
+        const updatedBlog = await blogService.update(blogObject)
+      } catch {
+        console.log('failed')
+      }
+    }
+  }
+
+  handleLike2 = () => {
+    console.log('hello world')
+  }
+
   addBlog = async event => {
     event.preventDefault()
 
@@ -162,7 +184,12 @@ class App extends React.Component {
           return (
             <div style={blogStyle} key={blog.id}>
               <TogglableArea>
-                <Blog blog={blog} />
+                <Blog
+                  blog={blog}
+                  likeHandler={
+                    this.handleLike2
+                  } /*{this.handleLike.bind(this)}*/
+                />
               </TogglableArea>
             </div>
           )

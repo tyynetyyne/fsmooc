@@ -91,7 +91,17 @@ class TogglableArea extends React.Component {
               {this.props.children.props.blog.url}
             </a>
             <br />
-            {this.props.children.props.blog.likes} <button>like</button>
+            {this.props.children.props.blog.likes}{' '}
+            <button
+              onClick={
+                this.props.children.props
+                  .likeHandler /*this.props.children.props.likeHandler(
+                this.props.children.props.blog.id
+              ) */
+              }
+            >
+              like
+            </button>
             <br />
             Added by {this.props.children.props.blog.user.name}
           </p>
