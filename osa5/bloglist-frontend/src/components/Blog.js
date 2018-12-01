@@ -1,9 +1,4 @@
 import React from 'react'
-// const Blog = ({ blog }) => (
-//   <div>
-//     {blog.title} {blog.author}
-//   </div>
-// )
 
 const Notification = ({ message, type }) => {
   if (message === null) {
@@ -17,7 +12,7 @@ const LogoutButton = ({ logoutHandler }) => {
 }
 
 const DeleteButton = ({ deleteHandler }) => {
-  return <button onClick={deleteHandler}>Delete</button>
+  return <button onClick={deleteHandler}> Delete</button>
 }
 
 const LoggedInUser = ({ user, logoutHandler }) => {
@@ -101,9 +96,13 @@ class TogglableArea extends React.Component {
               ? 'anonymous'
               : this.props.blog.user.name}
             <br />
-            <DeleteButton
-              deleteHandler={this.props.deleteHandler(this.props.blog.id)}
-            />
+            {(this.props.blog.user === undefined ||
+              this.props.blog.user.username ===
+                this.props.loggedInUser.username) && (
+              <DeleteButton
+                deleteHandler={this.props.deleteHandler(this.props.blog.id)}
+              />
+            )}
           </p>
         </div>
       </div>

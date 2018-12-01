@@ -256,6 +256,7 @@ class App extends React.Component {
                 blog={blog}
                 likeHandler={this.handleLike.bind(this)}
                 deleteHandler={this.handleDelete.bind(this)}
+                loggedInUser={this.state.user}
               />
             </div>
           )
