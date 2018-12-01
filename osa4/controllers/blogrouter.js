@@ -112,7 +112,7 @@ blogRouter.put('/:id', async (request, response) => {
 
     const body = request.body
 
-    console.log('body', body)
+    //console.log('body', body)
 
     const blogOnlyLikesChanged = { ...storedBlog._doc, likes: body.likes }
 
