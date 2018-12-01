@@ -89,62 +89,60 @@ class App extends React.Component {
     }
   }
 
-  handleLike = id => {
-    return async () => {
-      try {
-        const thisBlog = this.state.blogs.find(blog => {
-          return blog.id === id
-        })
+  handleLike = async id => {
+    try {
+      const thisBlog = this.state.blogs.find(blog => {
+        return blog.id === id
+      })
 
-        var blogObject
+      var blogObject
 
-        if (thisBlog.user === undefined) {
-          blogObject = {
-            url: thisBlog.url,
-            title: thisBlog.title,
-            author: thisBlog.author,
-            likes: thisBlog.likes + 1,
-          }
-        } else {
-          blogObject = {
-            url: thisBlog.url,
-            title: thisBlog.title,
-            author: thisBlog.author,
-            likes: thisBlog.likes + 1,
-            user: thisBlog.user._id,
-          }
+      if (thisBlog.user === undefined) {
+        blogObject = {
+          url: thisBlog.url,
+          title: thisBlog.title,
+          author: thisBlog.author,
+          likes: thisBlog.likes + 1,
         }
-
-        const updatedBlog = await blogService.update(id, blogObject)
-        const blogToBeStored = { ...updatedBlog, user: thisBlog.user }
-
-        var copyOfBlogs = [...this.state.blogs]
-
-        const indexOfBlog = this.state.blogs.findIndex(blog => {
-          return blog.id === id
-        })
-
-        copyOfBlogs[indexOfBlog] = blogToBeStored
-
-        this.setState({
-          blogs: copyOfBlogs,
-          newAuthor: '',
-          newUrl: '',
-          newTitle: '',
-          info: `Like was added to server`,
-        })
-
-        setTimeout(() => {
-          this.setState({ info: null })
-        }, 5000)
-      } catch (exception) {
-        this.setState({
-          error: 'Error, like was not added to server',
-        })
-        setTimeout(() => {
-          this.setState({ error: null })
-        }, 5000)
+      } else {
+        blogObject = {
+          url: thisBlog.url,
+          title: thisBlog.title,
+          author: thisBlog.author,
+          likes: thisBlog.likes + 1,
+          user: thisBlog.user._id,
+        }
       }
+
+      const updatedBlog = await blogService.update(id, blogObject)
+      const blogToBeStored = { ...updatedBlog, user: thisBlog.user }
+
+      var copyOfBlogs = [...this.state.blogs]
+
+      const indexOfBlog = this.state.blogs.findIndex(blog => {
+        return blog.id === id
+      })
+
+      copyOfBlogs[indexOfBlog] = blogToBeStored
+
+      this.setState({
+        blogs: copyOfBlogs,
+        newAuthor: '',
+        newUrl: '',
+        newTitle: '',
+        info: `Like was added to server`,
+      })
+
+      setTimeout(() => {
+        this.setState({ info: null })
+      }, 5000)
+    } catch (exception) {
+      this.setState({
+        error: 'Error, like was not added to server',
+      })
+      setTimeout(() => {
+        this.setState({ error: null })
+      }, 5000)
     }
   }
 
@@ -265,7 +263,7 @@ class App extends React.Component {
             <div style={blogStyle} key={blog.id}>
               <TogglableArea
                 blog={blog}
-                likeHandler={this.handleLike.bind(this)}
+                likeHandler={id => this.handleLike(id)}
                 deleteHandler={this.handleDelete.bind(this)}
                 loggedInUser={this.state.user}
               />

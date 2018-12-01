@@ -92,7 +92,12 @@ class TogglableArea extends React.Component {
             <a href={this.props.blog.url}>{this.props.blog.url}</a>
             <br />
             Likes: {this.props.blog.likes}
-            <button onClick={this.props.likeHandler(this.props.blog.id)}>
+            <button
+              onClick={e => {
+                e.stopPropagation()
+                this.props.likeHandler(this.props.blog.id)
+              }}
+            >
               like
             </button>
             <br />
