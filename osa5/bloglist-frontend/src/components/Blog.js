@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Notification = ({ message, type }) => {
   if (message === null) {
@@ -56,6 +57,10 @@ class Togglable extends React.Component {
   }
 }
 
+Togglable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
+}
+
 class TogglableArea extends React.Component {
   constructor(props) {
     super(props)
@@ -110,6 +115,13 @@ class TogglableArea extends React.Component {
   }
 }
 
+TogglableArea.propTypes = {
+  blog: PropTypes.object.isRequired,
+  loggedInUser: PropTypes.object.isRequired,
+  deleteHandler: PropTypes.func.isRequired,
+  likeHandler: PropTypes.func.isRequired,
+}
+
 const BlogForm = ({ addBlog, handleChange, newTitle, newAuthor, newUrl }) => {
   return (
     <div>
@@ -131,6 +143,14 @@ const BlogForm = ({ addBlog, handleChange, newTitle, newAuthor, newUrl }) => {
       </form>
     </div>
   )
+}
+
+BlogForm.propTypes = {
+  addBlog: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  newTitle: PropTypes.string.isRequired,
+  newAuthor: PropTypes.string.isRequired,
+  newUrl: PropTypes.string.isRequired,
 }
 
 const LoginForm = ({
@@ -180,6 +200,15 @@ const LoginForm = ({
       </div>
     </div>
   )
+}
+
+LoginForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  loginVisible: PropTypes.bool.isRequired,
+  toggleVisibility: PropTypes.func.isRequired,
 }
 
 export {

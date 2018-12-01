@@ -96,12 +96,23 @@ class App extends React.Component {
           return blog.id === id
         })
 
-        const blogObject = {
-          url: thisBlog.url,
-          title: thisBlog.title,
-          author: thisBlog.author,
-          likes: thisBlog.likes + 1,
-          user: thisBlog.user._id,
+        var blogObject
+
+        if (thisBlog.user === undefined) {
+          blogObject = {
+            url: thisBlog.url,
+            title: thisBlog.title,
+            author: thisBlog.author,
+            likes: thisBlog.likes + 1,
+          }
+        } else {
+          blogObject = {
+            url: thisBlog.url,
+            title: thisBlog.title,
+            author: thisBlog.author,
+            likes: thisBlog.likes + 1,
+            user: thisBlog.user._id,
+          }
         }
 
         const updatedBlog = await blogService.update(id, blogObject)
