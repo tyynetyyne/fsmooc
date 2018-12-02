@@ -28,9 +28,9 @@ describe.only('<TogglableArea />', () => {
     expect(shortDiv.text()).toContain(blog.title)
     expect(shortDiv.text()).toContain(blog.author)
 
-    const togglableDiv = blogComponent.find('.togglable')
+    const addinfoDiv = blogComponent.find('.addinfo')
 
-    expect(togglableDiv.prop('style')).toHaveProperty('display', 'none')
+    expect(addinfoDiv.prop('style')).toHaveProperty('display', 'none')
   })
 
   it('renders title, author, url and likes', () => {
@@ -57,18 +57,19 @@ describe.only('<TogglableArea />', () => {
     expect(shortDiv.text()).toContain(blog.title)
     expect(shortDiv.text()).toContain(blog.author)
 
+    const addinfoDiv = blogComponent.find('.addinfo')
+    expect(addinfoDiv.prop('style')).toHaveProperty('display', 'none')
+
+    expect(addinfoDiv.text()).toContain(blog.url)
+    expect(addinfoDiv.text()).toContain(blog.likes)
+
     const togglableDiv = blogComponent.find('.togglable')
-    expect(togglableDiv.prop('style')).toHaveProperty('display', 'none')
-
-    expect(togglableDiv.text()).toContain(blog.url)
-    expect(togglableDiv.text()).toContain(blog.likes)
-
     togglableDiv.simulate('click')
 
-    console.log('togglableDiv', togglableDiv.debug())
+    //console.log('togglableDiv', togglableDiv.debug())
 
-    const togglableDiv_new = blogComponent.find('.togglable')
-    expect(togglableDiv_new.prop('style')).toHaveProperty('display', '')
+    const addinfoDiv_new = blogComponent.find('.addinfo')
+    expect(addinfoDiv_new.prop('style')).toHaveProperty('display', '')
   })
 })
 

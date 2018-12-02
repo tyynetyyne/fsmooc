@@ -121,12 +121,12 @@ export class TogglableArea extends React.Component {
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
 
     return (
-      <div onClick={this.toggleVisibility}>
+      <div onClick={this.toggleVisibility} className="togglable">
         <ShortInfoBlog
           title={this.props.blog.title}
           author={this.props.blog.author}
         />
-        <div style={showWhenVisible} className="togglable">
+        <div style={showWhenVisible} className="addinfo">
           <LongInfoBlog
             url={this.props.blog.url}
             likes={this.props.blog.likes}
