@@ -1,5 +1,10 @@
 let token = null
 
+const setToken = newToken => {
+  token = `bearer ${newToken}`
+  //console.log('token set', newToken)
+}
+
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
@@ -82,4 +87,4 @@ const getAll = () => {
   return Promise.resolve(blogs)
 }
 
-export default { getAll, blogs }
+export default { getAll, blogs, setToken }
