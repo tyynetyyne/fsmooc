@@ -8,12 +8,44 @@ const Notification = ({ message, type }) => {
   return <div className={type}>{message}</div>
 }
 
+const ShortInfoBlog = ({ title, author }) => {
+  return (
+    <div className="shortinfo">
+      {title} {author}
+    </div>
+  )
+}
+
+const LongInfoBlog = ({ url, likes }) => {
+  return (
+    <div className="longinfo">
+      <a href={url}>{url}</a>
+      <br />
+      <div className="likes">Likes: {likes}</div>
+    </div>
+  )
+}
+
 const LogoutButton = ({ logoutHandler }) => {
   return <button onClick={logoutHandler}>Logout</button>
 }
 
 const DeleteButton = ({ deleteHandler }) => {
-  return <button onClick={deleteHandler}> Delete</button>
+  return <button onClick={deleteHandler}>Delete</button>
+}
+
+const LikeButton = ({ likeHandler, blogId }) => {
+  return (
+    <button
+      className="likebutton"
+      onClick={e => {
+        e.stopPropagation()
+        likeHandler(blogId)
+      }}
+    >
+      Like
+    </button>
+  )
 }
 
 const LoggedInUser = ({ user, logoutHandler }) => {
@@ -21,6 +53,18 @@ const LoggedInUser = ({ user, logoutHandler }) => {
     <div>
       <h2>{user.name} logged in</h2>
       <LogoutButton logoutHandler={logoutHandler} />
+    </div>
+  )
+}
+
+const AddedByUser = ({ user, deleteHandler, blogId, loggedInUser }) => {
+  return (
+    <div>
+      Added by {user === undefined ? 'anonymous' : user.name}
+      <br />
+      {(user === undefined || user.username === loggedInUser.username) && (
+        <DeleteButton deleteHandler={deleteHandler(blogId)} />
+      )}
     </div>
   )
 }
@@ -61,7 +105,7 @@ Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
 }
 
-class TogglableArea extends React.Component {
+export class TogglableArea extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -74,46 +118,30 @@ class TogglableArea extends React.Component {
   }
 
   render() {
-    const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
 
     return (
-      <div>
-        <div style={hideWhenVisible}>
-          <p onClick={this.toggleVisibility}>
-            {this.props.blog.title}
-            {this.props.blog.author}
-          </p>
-        </div>
-        <div style={showWhenVisible}>
-          <p onClick={this.toggleVisibility}>
-            {this.props.blog.title} {this.props.blog.author}
-            <br />
-            <a href={this.props.blog.url}>{this.props.blog.url}</a>
-            <br />
-            Likes: {this.props.blog.likes}
-            <button
-              onClick={e => {
-                e.stopPropagation()
-                this.props.likeHandler(this.props.blog.id)
-              }}
-            >
-              like
-            </button>
-            <br />
-            Added by{' '}
-            {this.props.blog.user === undefined
-              ? 'anonymous'
-              : this.props.blog.user.name}
-            <br />
-            {(this.props.blog.user === undefined ||
-              this.props.blog.user.username ===
-                this.props.loggedInUser.username) && (
-              <DeleteButton
-                deleteHandler={this.props.deleteHandler(this.props.blog.id)}
-              />
-            )}
-          </p>
+      <div onClick={this.toggleVisibility}>
+        <ShortInfoBlog
+          title={this.props.blog.title}
+          author={this.props.blog.author}
+        />
+        <div style={showWhenVisible} className="togglable">
+          <LongInfoBlog
+            url={this.props.blog.url}
+            likes={this.props.blog.likes}
+          />
+          <LikeButton
+            likeHandler={this.props.likeHandler}
+            blogId={this.props.blog.id}
+          />
+          <br />
+          <AddedByUser
+            user={this.props.blog.user}
+            deleteHandler={this.props.deleteHandler}
+            blogId={this.props.blog.id}
+            loggedInUser={this.props.loggedInUser}
+          />
         </div>
       </div>
     )
@@ -217,11 +245,10 @@ LoginForm.propTypes = {
 }
 
 export {
-  // Blog,
   Notification,
   LoggedInUser,
   LoginForm,
   BlogForm,
   Togglable,
-  TogglableArea,
+  //TogglableArea,
 }
