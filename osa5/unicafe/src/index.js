@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { createStore } from "redux";
+import counterReducer from "./reducer";
+
+const store = createStore(counterReducer);
 
 function Clear(props) {
   return (
@@ -36,14 +40,14 @@ function StatisticsHelp(props) {
 }
 
 function Statistics(props) {
-  const amount = props.good + props.neutral + props.bad;
+  const amount = props.good + props.ok + props.bad;
   return (
     <div>
       <h1>Statistiikka</h1>
       <table>
         <tbody>
           <Statistic text="Hyvä" value={props.good} />
-          <Statistic text="Neutraali" value={props.neutral} />
+          <Statistic text="Neutraali" value={props.ok} />
           <Statistic text="Huono" value={props.bad} />
           <StatisticsHelp
             total={amount}
@@ -61,23 +65,9 @@ function Button(props) {
 }
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      good: 0,
-      neutral: 0,
-      bad: 0
-    };
-  }
-
-  statechange = statevariable => {
-    return () => {
-      this.setState({ [statevariable]: this.state[statevariable] + 1 });
-    };
-  };
-
   all() {
-    return this.state.good + this.state.neutral + this.state.bad;
+    const state = store.getState();
+    return state.good + state.ok + state.bad;
   }
 
   round(number) {
@@ -85,33 +75,45 @@ class App extends React.Component {
   }
 
   mean() {
+    const state = store.getState();
     if (this.all() === 0) return 0;
-    return this.round((this.state.good - this.state.bad) / this.all());
+    return this.round((state.good - state.bad) / this.all());
   }
 
   positive() {
+    const state = store.getState();
     if (this.all() === 0) return 0;
-    return this.round((this.state.good / this.all()) * 100);
+    return this.round((state.good / this.all()) * 100);
   }
 
   handleClear = () => {
-    this.setState({ good: 0, neutral: 0, bad: 0 });
+    store.dispatch({ type: "ZERO" });
   };
 
   render() {
+    const state = store.getState();
     return (
       <div>
         <div>
           <h1>Anna palautetta</h1>
-          <Button text="Hyvä" handleClick={this.statechange("good")} />
-          <Button text="Neutraali" handleClick={this.statechange("neutral")} />
-          <Button text="Huono" handleClick={this.statechange("bad")} />
+          <Button
+            text="Hyvä"
+            handleClick={e => store.dispatch({ type: "GOOD" })}
+          />
+          <Button
+            text="Neutraali"
+            handleClick={e => store.dispatch({ type: "OK" })}
+          />
+          <Button
+            text="Huono"
+            handleClick={e => store.dispatch({ type: "BAD" })}
+          />
         </div>
         <div>
           <Statistics
-            good={this.state.good}
-            neutral={this.state.neutral}
-            bad={this.state.bad}
+            good={state.good}
+            ok={state.ok}
+            bad={state.bad}
             mean={this.mean()}
             positive={this.positive()}
           />
@@ -122,4 +124,9 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const renderApp = () => {
+  ReactDOM.render(<App />, document.getElementById("root"));
+};
+
+renderApp();
+store.subscribe(renderApp);
