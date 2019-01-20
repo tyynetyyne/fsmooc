@@ -29,6 +29,7 @@ steps:
       testResultsFiles: '**/junit.xml'
 
   - task: PublishCodeCoverageResults@1
+    condition: succeededOrFailed()
     inputs:
       codeCoverageTool: Cobertura
       summaryFileLocation: '**/coverage/cobertura-coverage.xml'
